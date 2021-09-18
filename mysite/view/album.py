@@ -5,3 +5,6 @@ from rest_framework.response import Response
 class AlbumView(APIView):
     def get(self, request):
         return Response(200)
+
+    def post(self, request):
+        return Response(200)
