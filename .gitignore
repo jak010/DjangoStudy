@@ -24,6 +24,8 @@ media
 # C extensions
 *.so
 
+.idea/dbnavigator.xml 
+
 # Distribution / packaging
 .Python
 build/
