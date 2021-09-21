@@ -15,29 +15,36 @@ USER_TYPE = (
 
 
 class AccountManager(BaseUserManager):
-    def create_user(self, email, nickname, password=None):
-        if not email:
+    def create_user(self, email, nickname, password):
+        if email:
+            print(">")
             user = self.model(
-                email=AccountManager.normalize_email(email),
-                nickname=nickname
+                email=self.normalize_email(email),
+                nickname=nickname,
+                password=password
             )
             user.set_password(password)
             user.save(using=self._db)
             return user
+        else:
+            return False
 
-    def create_superuser(self, email, nickname, password=None):
-        if not email:
-            user = self.model(
-                email=AccountManager.normalize_email(email),
-                nickname=nickname
+    def create_superuser(self, email, nickname, password):
+        if email:
+            superuser = self.model(
+                email=self.normalize_email(email),
+                nickname=nickname,
+                password=password
             )
-            user.is_admin = True
-            user.set_password(password)
-            user.save(using=self._db)
-            return user
+            superuser.is_admin = True
+            superuser.set_password(password)
+            superuser.save(using=self._db)
+            return superuser
+        else:
+            return False
 
 
-class Account(AbstractBaseUser, PermissionsMixin):
+class AccountModel(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = "account"
 
@@ -60,7 +67,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     ## Required Field
     is_active = models.BooleanField(default=True)
 
-    objects = AccountManager
+    objects = AccountManager()
 
     level = models.CharField(max_length=2, choices=USER_TYPE)
 

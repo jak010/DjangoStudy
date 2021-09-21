@@ -29,5 +29,11 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
+# Redoc Settings
+REDOC_SETTINGS = {
+    'LAZY_RENDERING': False,
+    'HIDE_HOSTNAME': True
+}
+
 # AUTH USER MODEL
-AUTH_USER_MODEL = "core.Account"
+AUTH_USER_MODEL = "core.AccountModel"

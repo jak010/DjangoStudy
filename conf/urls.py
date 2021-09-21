@@ -38,13 +38,13 @@ schema_view = get_schema_view(
         title="Maseting Django API - mysite app",
         default_version="v1",
         description="장고 연습용",
+        terms_of_service="http://jakpentest.tistory.com",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns += [
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    # url(r'^api.json$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^redoc$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
 ]

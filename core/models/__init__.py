@@ -1,3 +1,3 @@
-from .Account import Account
-from .Albums import Albums
-from .Artists import Artists
+from .Account import AccountModel
+from .Albums import AlbumsModel
+from .Artists import ArtistsModel
