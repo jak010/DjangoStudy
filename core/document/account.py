@@ -43,7 +43,7 @@ class RESPONSE:
         class NORMAL:
             STATUS = status.HTTP_200_OK
             MESSAGE = openapi.Response(
-                description="정상적인 경우",
+                description="OK",
                 examples={
                     'application/json': {
                         'nickname': "USER_NICKNAME",
@@ -57,23 +57,21 @@ class RESPONSE:
         class NORMAL:
             STATUS = status.HTTP_200_OK
             MESSAGE = openapi.Response(
-                description="정상적인 경우",
+                description="OK",
                 examples={
                     'application/json': {
-                        "status": STATUS,
-                        "message": "Normal"
+                        "message": "The item was created successfully"
                     }
                 }
             )
 
-        class AlreadyExistEmail:
+        class Validation:
             STATUS = status.HTTP_400_BAD_REQUEST
             MESSAGE = openapi.Response(
-                description="이미 계정이 있는 경우",
+                description="Bad Request",
                 examples={
                     "application/json": {
-                        "status": STATUS,
-                        "email": ["account model with this email already exists."]
+                        "key": ["Specify Description about key"],
                     }
                 },
             )

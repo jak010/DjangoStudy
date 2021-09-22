@@ -16,8 +16,7 @@ USER_TYPE = (
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, nickname, password):
-        if email:
-            print(">")
+        if not email or password:
             user = self.model(
                 email=self.normalize_email(email),
                 nickname=nickname,
