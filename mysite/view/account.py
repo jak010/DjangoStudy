@@ -12,13 +12,14 @@ from core import response
 class AccountView(APIView):
 
     @swagger_auto_schema(
-        operation_id='GET, ^mystie/account',
+        operation_id='유저 데이터 조회',
         operation_description="유저 데이터 조회",
 
         manual_parameters=[
             _doc.REQUEST.GET.email,
             _doc.REQUEST.GET.nickname,
-            _doc.REQUEST.GET.last_login
+            _doc.REQUEST.GET.last_login_from,
+            _doc.REQUEST.GET.last_login_to,
         ],
 
         responses={
@@ -27,10 +28,12 @@ class AccountView(APIView):
     )
     def get(self, request):
         """ 유저 목록 조회 """
-        return Response({"message": "ok"})
+        data = account.AccountService()
+
+        return Response(data=data.list())
 
     @swagger_auto_schema(
-        operation_id="POST, ^mystie/account",
+        operation_id="유저 생성",
         operation_description=
         """
         유저 생성, email, passsword, nickname을 받아서 생성        
@@ -54,4 +57,4 @@ class AccountView(APIView):
         if not service.create():
             return response.CreateFail()
 
-        return response.Normal()
+        return response.Created()

@@ -3,17 +3,7 @@ from rest_framework import exceptions
 from rest_framework.response import Response
 
 
-class Normal(Response):
-    """ Normal """
-
-    def __init__(self):
-        super().__init__(
-            status=status.HTTP_200_OK,
-            data={
-                "message": "The item was created successfully"
-            }
-        )
-
+# RestFrame Work, Exception
 
 class Validation(Response):
     """ Raise Exception """
@@ -25,6 +15,20 @@ class Validation(Response):
         )
 
 
+# Custom, Exception
+
+class Created(Response):
+    """ Status, 201 """
+
+    def __init__(self):
+        super().__init__(
+            status=status.HTTP_201_CREATED,
+            data={
+                "message": "The Resource was created successfully"
+            }
+        )
+
+
 class CreateFail(Response):
     """ Bad Request """
 
@@ -33,6 +37,6 @@ class CreateFail(Response):
         super().__init__(
             status=status.HTTP_400_BAD_REQUEST,
             data={
-                'message': '"CreateFail"'
+                'message': 'CreateFail'
             }
         )

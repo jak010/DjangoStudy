@@ -7,22 +7,26 @@ class REQUEST:
         nickname = openapi.Parameter(
             'nickname',
             openapi.IN_QUERY,
-            required=True,
-            description="회원 nickname",
-            type=openapi.TYPE_NUMBER
+            description="acoount, nickname",
+            type=openapi.TYPE_STRING
         )
         email = openapi.Parameter(
             'email',
             openapi.IN_QUERY,
-            required=True,
-            description="회원 nickname",
+            description="account, email",
+            type=openapi.TYPE_STRING
+        )
+        last_login_from = openapi.Parameter(
+            'last_login_from',
+            openapi.IN_QUERY,
+            description="account, last_login",
             type=openapi.TYPE_NUMBER
         )
-        last_login = openapi.Parameter(
-            'last_login',
+
+        last_login_to = openapi.Parameter(
+            'last_login_to',
             openapi.IN_QUERY,
-            required=True,
-            description="회원 nickname",
+            description="account, last_login",
             type=openapi.TYPE_NUMBER
         )
 
@@ -46,8 +50,9 @@ class RESPONSE:
                 description="OK",
                 examples={
                     'application/json': {
-                        'nickname': "USER_NICKNAME",
-                        "email": "test@test.com",
+                        'id': 'int',
+                        'nickname': "string",
+                        "email": "string",
                         "last_login": 0
                     }
                 }
@@ -55,12 +60,12 @@ class RESPONSE:
 
     class POST:
         class NORMAL:
-            STATUS = status.HTTP_200_OK
+            STATUS = status.HTTP_201_CREATED
             MESSAGE = openapi.Response(
                 description="OK",
                 examples={
                     'application/json': {
-                        "message": "The item was created successfully"
+                        "message": "The Resource was created successfully"
                     }
                 }
             )
@@ -71,7 +76,12 @@ class RESPONSE:
                 description="Bad Request",
                 examples={
                     "application/json": {
-                        "key": ["Specify Description about key"],
+                        "nickname": [
+                            "account model with this nick_name already exists."
+                        ],
+                        "email": [
+                            "account model with this email already exists."
+                        ]
                     }
                 },
             )
