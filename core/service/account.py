@@ -1,13 +1,23 @@
 from __future__ import annotations
 
 from rest_framework import serializers
+from django_filters import rest_framework as filters
+
 from ..models.Account import AccountModel
+
+
+class AccountFilterSet(filters.FilterSet):
+    nickname = filters.CharFilter(field_name='nickname', lookup_expr='exact')
+
+    class Meta:
+        model = AccountModel
+        fields = ('nickname', 'email')
 
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountModel
-        fields = '__all__'
+        fields = ['id', 'nickname', 'email', 'last_login', 'level']
 
 
 class AccountService(object):
@@ -16,13 +26,21 @@ class AccountService(object):
         self.request = request
 
         self.model = AccountModel
-        self.serializer = AccountSerializer
 
     def list(self):
         """ 목록조회 """
         # TODO : 필터링, 정렬, 페이지네이션
-        queryset = self.model.objects.all().values('id', 'email', 'nickname', 'last_login')
-        return list(queryset)
+
+        # 필터링 예제 21.09.24
+        queryset = self.model.objects.all()
+        account = AccountFilterSet(self.request.GET, queryset=queryset)
+
+        if account.is_valid():
+            qs_filter = account.filter_queryset(queryset=account.queryset) \
+                .values('id', 'nickname', 'email', 'last_login')
+            return qs_filter
+        else:
+            return list()
 
     def retreive(self):
         pass
