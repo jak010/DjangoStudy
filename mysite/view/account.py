@@ -15,7 +15,7 @@ class AccountView(
 ):
     serializer_class = account.AccountSerializer
     queryset = account.AccountModel.objects.all()
-    filter_class = (account.AccountFilterSet,)
+    filter_class = account.AccountFilterSet
 
     @swagger_auto_schema(
         operation_id='유저 데이터 조회',

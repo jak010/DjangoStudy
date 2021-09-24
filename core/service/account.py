@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import cached_property
 
 from rest_framework import serializers
 from django_filters import rest_framework as filters
@@ -11,13 +12,13 @@ class AccountFilterSet(filters.FilterSet):
 
     class Meta:
         model = AccountModel
-        fields = ('nickname', 'email')
+        fields = ('nickname', 'email',)
 
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountModel
-        fields = ['id', 'nickname', 'email', 'last_login', 'level']
+        fields = ('id', 'nickname', 'email', 'last_login')
 
 
 class AccountService(object):
@@ -26,19 +27,26 @@ class AccountService(object):
         self.request = request
 
         self.model = AccountModel
+        self.serializer = AccountSerializer
+
+    @cached_property
+    def query_set(self):
+        return self.model.objects.all()
 
     def list(self):
         """ 목록조회 """
         # TODO : 필터링, 정렬, 페이지네이션
 
         # 필터링 예제 21.09.24
-        queryset = self.model.objects.all()
-        account = AccountFilterSet(self.request.GET, queryset=queryset)
+        account = AccountFilterSet(self.request.GET, queryset=self.query_set)
 
         if account.is_valid():
-            qs_filter = account.filter_queryset(queryset=account.queryset) \
-                .values('id', 'nickname', 'email', 'last_login')
-            return qs_filter
+            return self.serializer(
+                account.filter_queryset(
+                    queryset=account.queryset
+                ).values(),
+                many=True
+            ).data
         else:
             return list()
 

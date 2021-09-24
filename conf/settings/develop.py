@@ -27,15 +27,13 @@ DATABASES = {
 
 # Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend',],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 # Redoc Settings
 REDOC_SETTINGS = {
     'LAZY_RENDERING': False,
-    'HIDE_HOSTNAME': True
 }
 
 # AUTH USER MODEL
