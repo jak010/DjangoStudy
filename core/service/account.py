@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from django.core.paginator import Paginator
+
 from rest_framework import serializers
+
 from ..models.Account import AccountModel
 
 
@@ -22,7 +25,12 @@ class AccountService(object):
         """ 목록조회 """
         # TODO : 필터링, 정렬, 페이지네이션
         queryset = self.model.objects.all().values('id', 'email', 'nickname', 'last_login')
-        return list(queryset)
+
+        page_number = self.request.query_params.get("page_number", default=1)
+        page_size = self.request.query_params.get("page_size", default=1)
+        paginator = Paginator(queryset, page_size)
+
+        return list(paginator.page(page_number))
 
     def retreive(self):
         pass

@@ -1,3 +1,5 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger
+
 from rest_framework.views import APIView
 from rest_framework import exceptions
 from rest_framework.response import Response
@@ -28,9 +30,12 @@ class AccountView(APIView):
     )
     def get(self, request):
         """ 유저 목록 조회 """
-        data = account.AccountService()
+        try:
+            data = account.AccountService(request).list()
+        except (PageNotAnInteger, EmptyPage):
+            return response.Validation(message={"detail" : "Invalid Page."})
 
-        return Response(data=data.list())
+        return Response(data=data)
 
     @swagger_auto_schema(
         operation_id="유저 생성",
