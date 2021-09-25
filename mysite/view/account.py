@@ -22,6 +22,8 @@ class AccountView(APIView):
             _doc.REQUEST.GET.nickname,
             _doc.REQUEST.GET.last_login_from,
             _doc.REQUEST.GET.last_login_to,
+            _doc.REQUEST.GET.page_size,
+            _doc.REQUEST.GET.page_number,
         ],
 
         responses={
@@ -31,9 +33,15 @@ class AccountView(APIView):
     def get(self, request):
         """ 유저 목록 조회 """
         try:
-            data = account.AccountService(request).list()
-        except (PageNotAnInteger, EmptyPage):
-            return response.Validation(message={"detail" : "Invalid Page."})
+            page_number = self.request.query_params.get("page_number", default=1)
+            page_size = self.request.query_params.get("page_size", default=1)
+        except PageNotAnInteger as err:
+            return response.Validation(message={"detail": "Invalid Page."})
+
+        try:
+            data = account.AccountService(request).list(page_number=page_number, page_size=page_size)
+        except EmptyPage as err:
+            return response.Validation(message={"detail": "Invalid Page."})
 
         return Response(data=data)
 

@@ -21,16 +21,16 @@ class AccountService(object):
         self.model = AccountModel
         self.serializer = AccountSerializer
 
-    def list(self):
+    def list(self, page_number=None, page_size=None):
         """ 목록조회 """
         # TODO : 필터링, 정렬, 페이지네이션
-        queryset = self.model.objects.all().values('id', 'email', 'nickname', 'last_login')
+        queryset = self.model.objects.all() \
+            .values('id', 'email', 'nickname', 'last_login').order_by('-id')
 
-        page_number = self.request.query_params.get("page_number", default=1)
-        page_size = self.request.query_params.get("page_size", default=1)
-        paginator = Paginator(queryset, page_size)
-
-        return list(paginator.page(page_number))
+        if page_size is None:
+            return list(Paginator(queryset, page_size).page(page_number))
+        else:
+            return queryset
 
     def retreive(self):
         pass
