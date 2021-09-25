@@ -1,6 +1,7 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger
 
 from rest_framework.views import APIView
+from rest_framework import mixins, generics
 from rest_framework import exceptions
 from rest_framework.response import Response
 
@@ -11,7 +12,12 @@ from core.document import account as _doc
 from core import response
 
 
-class AccountView(APIView):
+class AccountView(
+    generics.GenericAPIView
+):
+    serializer_class = account.AccountSerializer
+    queryset = account.AccountModel.objects.all()
+    filter_class = account.AccountFilterSet
 
     @swagger_auto_schema(
         operation_id='유저 데이터 조회',
@@ -30,7 +36,7 @@ class AccountView(APIView):
             _doc.RESPONSE.GET.NORMAL.STATUS: _doc.RESPONSE.GET.NORMAL.MESSAGE
         }
     )
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         """ 유저 목록 조회 """
         try:
             page_number = self.request.query_params.get("page_number", default=1)

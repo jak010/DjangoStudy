@@ -11,6 +11,4 @@ urlpatterns = [
 
     # Albums
     url(r"album$", album.AlbumView.as_view())  # GET: 목록조회
-
 ]
-

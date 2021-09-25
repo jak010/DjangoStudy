@@ -18,16 +18,8 @@ from django.conf.urls import url
 from django.urls import path, include
 
 urlpatterns = [
-    path("mysite/", include("mysite.urls"))
+    path("mysite/", include("mysite.urls")),
 ]
-
-# from rest_framework.documentation import include_docs_urls
-#
-# docs_view = include_docs_urls(title='Api', description="Hello")
-#
-# urlpatterns += [
-#     path("docs/", docs_view)
-# ]
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -41,7 +33,7 @@ schema_view = get_schema_view(
         terms_of_service="http://jakpentest.tistory.com",
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(permissions.AllowAny,)
 )
 
 urlpatterns += [
