@@ -30,6 +30,20 @@ class REQUEST:
             type=openapi.TYPE_NUMBER
         )
 
+        page_size = openapi.Parameter(
+            'page_size',
+            openapi.IN_QUERY,
+            description="account, page_size",
+            type=openapi.TYPE_NUMBER
+        )
+
+        page_number = openapi.Parameter(
+            'page_number',
+            openapi.IN_QUERY,
+            description="account, page_number",
+            type=openapi.TYPE_NUMBER
+        )
+
     class POST:
         body = openapi.Schema(
             type=openapi.TYPE_OBJECT,
@@ -49,12 +63,12 @@ class RESPONSE:
             MESSAGE = openapi.Response(
                 description="OK",
                 examples={
-                    'application/json': {
+                    'application/json': [{
                         'id': 'int',
                         'nickname': "string",
                         "email": "string",
                         "last_login": 0
-                    }
+                    }]
                 }
             )
 

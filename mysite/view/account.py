@@ -1,3 +1,5 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger
+
 from rest_framework.views import APIView
 from rest_framework import mixins, generics
 from rest_framework import exceptions
@@ -26,6 +28,8 @@ class AccountView(
             _doc.REQUEST.GET.nickname,
             _doc.REQUEST.GET.last_login_from,
             _doc.REQUEST.GET.last_login_to,
+            _doc.REQUEST.GET.page_size,
+            _doc.REQUEST.GET.page_number,
         ],
 
         responses={
@@ -34,10 +38,18 @@ class AccountView(
     )
     def get(self, request, *args, **kwargs):
         """ 유저 목록 조회 """
+        try:
+            page_number = self.request.query_params.get("page_number", default=1)
+            page_size = self.request.query_params.get("page_size", default=1)
+        except PageNotAnInteger as err:
+            return response.Validation(message={"detail": "Invalid Page."})
 
-        data = account.AccountService(request=request)
+        try:
+            data = account.AccountService(request).list(page_number=page_number, page_size=page_size)
+        except EmptyPage as err:
+            return response.Validation(message={"detail": "Invalid Page."})
 
-        return Response(data=data.list())
+        return Response(data=data)
 
     @swagger_auto_schema(
         operation_id="유저 생성",
