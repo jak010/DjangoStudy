@@ -9,7 +9,7 @@ from django_filters import rest_framework as filters
 from ..models.Account import AccountModel
 
 
-class AccountFilterSet(filters.FilterSet):
+class AccountFilter(filters.FilterSet):
     nickname = filters.CharFilter(field_name='nickname', lookup_expr='exact')
 
     class Meta:
@@ -21,6 +21,7 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountModel
         fields = ('id', 'nickname', 'email', 'last_login')
+        ordering = ('id',)
 
 
 class AccountService(object):
@@ -37,33 +38,27 @@ class AccountService(object):
 
     def list(self, page_number=None, page_size=None):
         """ 목록조회 """
-        # TODO : 필터링, 정렬(정렬키에 대해 동적으로 동작하게끔 구현 필요)
-        queryset = self.query_set \
-            .values('id', 'email', 'nickname', 'last_login') \
-            .order_by('-id')
+        # TODO :  정렬(정렬키에 대해 동적으로 동작하게끔 구현 필요)
 
-        if page_size is None:
-            return list(Paginator(queryset, page_size).page(page_number))
-        else:
-            return queryset
+        account = AccountFilter(self.request.GET, queryset=self.query_set)
+        account.is_valid()
 
-    # 아래 필터셋은 view에서 봐야됨
-    # def list(self, page_number=None, page_size=None):
-    #     """ 목록조회 """
-    #     # TODO : 필터링, 정렬, 페이지네이션
-    #
-    #     # 필터링 예제 21.09.24
-    #     account = AccountFilterSet(self.request.GET, queryset=self.query_set)
-    #
-    #     if account.is_valid():
-    #         return self.serializer(
-    #             account.filter_queryset(
-    #                 queryset=account.queryset
-    #             ).values(),
-    #             many=True
-    #         ).data
-    #     else:
-    #         return list()
+        # page paramater 가 둘 중 한라도 없으면 전체 목록조회
+        if not all([page_size, page_number]):
+            qs_filter = account.filter_queryset(queryset=account.queryset).values()
+
+            return self.serializer(
+                qs_filter,
+                many=True
+            ).data
+
+        # paginator 적용
+        paginator = Paginator(
+            account.filter_queryset(account.queryset),
+            page_size
+        ).page(page_number).object_list
+
+        return self.serializer(paginator, many=True).data
 
     def retreive(self):
         pass
