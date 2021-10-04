@@ -15,6 +15,7 @@ INSTALLED_APPS += [
     'coreapi',
     'drf_yasg',
     'mysite',
+    'appsig',
     'core',
 ]
 

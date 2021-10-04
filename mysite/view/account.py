@@ -63,6 +63,11 @@ class AccountView(generics.GenericAPIView):
     )
     def get(self, request):
         """ 유저 목록 조회 """
+        from appsig import signals
+
+        signals.signal_test.send(
+            sender=self.__class__.__name__
+        )
 
         try:
             page_number = self.request.query_params.get("page_number", default=None)
